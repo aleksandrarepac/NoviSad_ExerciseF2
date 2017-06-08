@@ -1,9 +1,37 @@
 
 // Before you commit and push write your student ID and finish time here.
-// Finish time:
-// Student ID:
+// Finish time:20:45:00
+// Student ID: Aleksandra Repac it31/2015
 
 public class PlanetExplorer {
+	private int[][] grid;
+	private char actualFace;
+	private int actualPositionX;
+	private int actualPositionY;
+	private int maxX;
+	private int maxY;
+	private String obstacles = "";
+	private final static char N = 'N';
+	private final static char S = 'S';
+	private final static char E = 'E';
+	private final static char W = 'W';
+	
+	private boolean checkOstacoles(int x, int y) {
+		if (!(x > maxX || y > maxY || x < 0 || y < 0)) {
+			if (grid[x][y] == -1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public int[][] getGrid(){
+		return grid;
+	}
+	
+
 	public PlanetExplorer(int x, int y, String obstacles){
 	/*	x and y represent the size of the grid.
 	 *  Obstacles is a String formatted as follows: "(obs1_x,obs1_y)(obs2_x,obs2_y)...(obsN_x,obsN_y)" with no white spaces. 
@@ -11,10 +39,44 @@ public class PlanetExplorer {
 		Example use: For a 100x100 grid with two obstacles at coordinates (5,5) and (7,8)
 		PlanetExplorer explorer = new PlanetExplorer(100,100,"(5,5)(7,8)")  
 		 
+		 
 	 */
+		grid = new int[x][y];
+		actualPositionX = 0;
+		actualPositionX = 0;
+		grid[actualPositionX][actualPositionY] = 1;
+		actualFace = N;
+		maxX = x - 1;
+		maxY = y - 1;
+
+		if (obstacles != null) {
+			setObstacles(obstacles);
+		}
+	
+		
+
+		
+	}
+	private void setObstacles(String obstacles) {
+
+		char[] obstaclesA = obstacles.toCharArray();
+		for (int i = 0; i < obstacles.length() - 1; i++) {
+			if (obstaclesA[i] == '(') {
+
+				int x = Integer.valueOf(String.valueOf(obstaclesA[i + 1]));
+				int y = Integer.valueOf(String.valueOf(obstaclesA[i + 3]));
+
+				grid[x][y] = -1;
+				this.obstacles = "(" + x + "," + y + ")";
+
+			}
+		}
+
 	}
 	
-	public String executeCommand(String command){
+
+
+	public String executeCommand(String command) {
 		
 		/* The command string is composed of "f" (forward), "b" (backward), "l" (left) and "r" (right)
 		 * Example: 
@@ -25,7 +87,62 @@ public class PlanetExplorer {
 		 * Where pos_x and pos_y are the final coordinates, facing is the current direction the explorer is pointing to (N,S,W,E).
 		 * The return string should also contain a list of coordinates of the encountered obstacles. No white spaces.
 		 */
-		
-		return null;
-	}
+		char commandA[] = command.toCharArray();
+		for (char c : commandA) {
+			
+			if (c == 'l') {
+				if (actualFace == N) {
+					actualFace = S;
+				} else if (actualFace == S) {
+					actualFace = N;
+				} else if (actualFace == E) {
+					actualFace = W;
+				} else if (actualFace == W) {
+					actualFace = E;
+				}
+				
+			}
+			
+			else if (c == 'r') {
+				if (actualFace == N) {
+					actualFace = E;
+				} else if (actualFace == E) {
+					actualFace = S;
+				} else if (actualFace == S) {
+					actualFace = W;
+				} else if (actualFace == W) {
+					actualFace = N;
+				}
+			}
+			
+			else if(c== 'f'){
+				if(actualFace== N){
+					
+					if (actualPositionY + 1 > maxY && !checkOstacoles(actualPositionX, 0)) {
+						grid[actualPositionX][actualPositionY] = 0;
+						actualPositionY = 0;
+						grid[actualPositionX][actualPositionY] = 1;
+
+				}else if (!checkOstacoles(actualPositionX, actualPositionY + 1)) {
+					grid[actualPositionX][actualPositionY] = 0;
+					actualPositionY++;
+					grid[actualPositionX][actualPositionY] = 1;
+					}
+				}
+			}
+				if(actualFace==S){
+					if (actualPositionY - 1 < 0 && !checkOstacoles(actualPositionX, maxY)) {
+						grid[actualPositionX][actualPositionY] = 0;
+						actualPositionY = maxY;
+						grid[actualPositionX][actualPositionY] = 1;
+				}
+					else if (!checkOstacoles(actualPositionX, actualPositionY - 1)) {
+						grid[actualPositionX][actualPositionY] = 0;
+						actualPositionY--;
+						grid[actualPositionX][actualPositionY] = 1;
+				}
+				}
+				return null;
 }
+	}}
+		
